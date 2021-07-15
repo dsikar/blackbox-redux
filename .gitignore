@@ -3,8 +3,12 @@
 
 # except .gitignore
 !.gitignore
+
 # and service loop script
 !service-loop.py
 
-# Read,e
+# Readme
 !README.md
+
+# Logging utility functions
+!logging.py

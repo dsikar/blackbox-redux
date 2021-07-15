@@ -3,34 +3,11 @@ import shlex
 import time
 import datetime
 import readID as readIDVar
-
+import logging as lg
 
 poll_list = [ True, True ]
 
 point_poll_sucess = True;
-
-def writelog(entry, logfile) :
-    """
-    writelog - write log entry to log file
-    to usb drive is exists, otherwise to /tmp
-    Input
-        entry: string, log entry
-        logfile: string, log file
-    Output
-        none
-    """
-    logdrive = ''
-    out = subprocess.check_output(['ls', '/media/pi'])
-    if len(out) > 0 :
-        logdrive = '/media/pi/' + out
-        logdrive = logdrive.rstrip('\n')
-        logdrive += '/'
-    else :
-        logdrive = '/tmp/'
-    logdrive += logfile
-    fout = open(logdrive, 'a')
-    fout.write(entry)
-    fout.close()
 
 def hex_to_int( value ) :
 
@@ -168,7 +145,7 @@ logfile = str(datetime.datetime.today().strftime('%Y%m%d%H%M%S'))
 logfile += '_BlackBox.log'
 # todo, adapt for Windows
 print(entry)
-# writelog(entry, logfile)
+# lg.writelog(entry, logfile)
 
 
 # whether we should poll this device.
@@ -200,7 +177,7 @@ while(True):
             #print(action)
             payload = subprocess.check_output(shlex.split(action));
             if len(payload) > 1: #for some reason printing an empty payload still constitutes to greater than 0, so we use 1 instead
-                # writelog(payload,logfile)
+                lg.writelog(payload,logfile)
                 # TODO adjust to windows 7/10
                 print("Reply from Panel")
                 #print(payload)

@@ -2,15 +2,6 @@
 import subprocess
 import conf
 
-# TODO make this a class
-# for now use global variables
-
-# LED States, solid or blinking
-curr_state = 'SOLID'
-prev_state = 'BLINKING'
-state = 'SOLID'
-run_cmd = False
-
 def writelog(entry, logfile) :
     """
     writelog - write log entry to log file
@@ -25,32 +16,33 @@ def writelog(entry, logfile) :
     """
     # where to log
     logdrive = ''
-    # LED blinking command
-    cmd = ''
+    cnmd = ''
     out = subprocess.check_output(['ls', '/media/pi'])
+
     if len(out) > 0 :
         logdrive = '/media/pi/' + out
         logdrive = logdrive.rstrip('\n')
         logdrive += '/'
-        state = 'BLINKING'
+        conf.state = 'BLINKING'
     else :
         logdrive = '/tmp/'
-        state = 'SOLID'
+        conf.state = 'SOLID'
 
-    if(prev_state != state) :
-        run_cmd = True
-        if state == 'SOLID' :
-            cmd = 'echo none > /sys/class/leds/led0/trigger'
+    if(conf.prev_state != conf.state) :
+        conf.run_cmd = True
+        if conf.state == 'SOLID' :
+            conf.cmd = 'echo none > /sys/class/leds/led0/trigger'
         else : # BLINKING
-            cmd = 'echo heartbeat > /sys/class/leds/led0/trigger'
-        prev_state = state
+            conf.cmd = 'echo heartbeat > /sys/class/leds/led0/trigger'
+        conf.prev_state = conf.state
 
-    if run_cmd == True :
+    if conf.run_cmd == True :
+        cmd = conf.cmd
         process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
         print("output: ", output)
         print("error: ". error)
-        run_cmd = False
+        conf.run_cmd = False
 
     logdrive += logfile
 

@@ -1,4 +1,5 @@
 # Logging utility functions
+import subprocess
 
 # TODO make this a class
 # for now use global variables
@@ -7,6 +8,7 @@
 curr_state = 'SOLID'
 prev_state = 'BLINKING'
 state = 'SOLID'
+run_cmd = False
 
 def writelog(entry, logfile) :
     """
@@ -20,7 +22,10 @@ def writelog(entry, logfile) :
     Output
         none
     """
+    # where to log
     logdrive = ''
+    # LED blinking command
+    cmd = ''
     out = subprocess.check_output(['ls', '/media/pi'])
     if len(out) > 0 :
         logdrive = '/media/pi/' + out
@@ -31,10 +36,19 @@ def writelog(entry, logfile) :
         logdrive = '/tmp/'
         state = 'SOLID'
     if(prev_state != state) :
+        run_cmd = True
         if state == 'SOLID' :
-
+            cmd = 'echo none > /sys/class/leds/led0/trigger'
         else : # BLINKING
-            
+            cmd = 'echo heartbeat > /sys/class/leds/led0/trigger'
+        prev_state = state
+    if run_cmd == True :
+        process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        print("output: ", output)
+        print("error: ". error)
+        run_cmd = False
+
     logdrive += logfile
     fout = open(logdrive, 'a')
     fout.write(entry)

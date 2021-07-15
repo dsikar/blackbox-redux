@@ -1,5 +1,6 @@
 # Logging utility functions
 import subprocess
+import conf
 
 # TODO make this a class
 # for now use global variables
@@ -35,6 +36,7 @@ def writelog(entry, logfile) :
     else :
         logdrive = '/tmp/'
         state = 'SOLID'
+
     if(prev_state != state) :
         run_cmd = True
         if state == 'SOLID' :
@@ -42,6 +44,7 @@ def writelog(entry, logfile) :
         else : # BLINKING
             cmd = 'echo heartbeat > /sys/class/leds/led0/trigger'
         prev_state = state
+
     if run_cmd == True :
         process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
@@ -50,6 +53,8 @@ def writelog(entry, logfile) :
         run_cmd = False
 
     logdrive += logfile
-    fout = open(logdrive, 'a')
-    fout.write(entry)
-    fout.close()
+
+    if conf.DEBUG == False :
+        fout = open(logdrive, 'a')
+        fout.write(entry)
+        fout.close()

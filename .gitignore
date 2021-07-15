@@ -12,3 +12,6 @@
 
 # Logging utility functions
 !logging.py
+
+# configuration file
+!conf.py

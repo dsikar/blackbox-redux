@@ -5,3 +5,6 @@
 !.gitignore
 # and service loop script
 !service-loop.py
+
+# Read,e
+!README.md

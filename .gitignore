@@ -12,3 +12,5 @@
 
 # Logging utility functions
 !logging.py
+# pi@raspberrypi:~ $ sudo bash -c 'echo heartbeat > /sys/class/leds/led0/trigger'
+# pi@raspberrypi:~ $ sudo bash -c 'echo none > /sys/class/leds/led0/trigger'

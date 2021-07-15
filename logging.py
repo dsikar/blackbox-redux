@@ -1,7 +1,7 @@
 # Logging utility functions
 import subprocess
 import conf
-
+import os
 def writelog(entry, logfile) :
     """
     writelog - write log entry to log file
@@ -31,18 +31,19 @@ def writelog(entry, logfile) :
     if(conf.prev_state != conf.state) :
         conf.run_cmd = True
         if conf.state == 'SOLID' :
-            conf.cmd = 'echo none > /sys/class/leds/led0/trigger'
+            conf.cmd = 'sudo bash -c \'echo none > /sys/class/leds/led0/trigger\''
         else : # BLINKING
-            conf.cmd = 'echo heartbeat > /sys/class/leds/led0/trigger'
+            conf.cmd = 'sudo bash -c \'echo heartbeat > /sys/class/leds/led0/trigger\''
         conf.prev_state = conf.state
 
     if conf.run_cmd == True :
-        cmd = conf.cmd
-        process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        print("output: ", output)
-        print("error: ". error)
+        #process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+        #output, error = process.communicate()
+        #print("output: ", output)
+        #print("error: ", error)
         conf.run_cmd = False
+        os.system(conf.cmd)
+        # os.system(cmd)
 
     logdrive += logfile
 

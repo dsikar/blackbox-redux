@@ -15,3 +15,9 @@
 
 # configuration file
 !conf.py
+
+# constants file
+!contants.py
+
+# Mike's (new TODO merge conf.py into this) config file
+!config.py
